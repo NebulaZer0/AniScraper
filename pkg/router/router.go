@@ -22,40 +22,40 @@ func Run() {
 func getAnime(w http.ResponseWriter, r *http.Request) {
 
 	var payload []byte
-	request := make(map[string]interface{})
-	message := make(map[string]interface{})
+	request := make(map[string]interface{}) // payload receieved
+	message := make(map[string]interface{}) //return message AKA payload
 
 	logger.Log.Infof("Request received from %v", r.RemoteAddr)
-	w.Header().Set("Content-type", "application/json")
+	w.Header().Set("Content-type", "application/json") //set header
 
-	err := json.NewDecoder(r.Body).Decode(&request)
+	err := json.NewDecoder(r.Body).Decode(&request) //decode body and put in var request
 	if err != nil {
 		logger.Log.Error(err)
 	}
 
-	if len(request) > 1 {
+	if len(request) > 1 { //Check if more then one key was recieved, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "Given " + strconv.Itoa(len(request)) + " Keys when only 1 was Expected!"
 		logger.Log.Errorf("Recieved %v Keys instead of one! Dropping...", len(request))
 
-	} else if _, ok := request["title"]; !ok {
+	} else if _, ok := request["title"]; !ok { //check if 'title' key is missing, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "'title' key was not found!"
 		logger.Log.Error("title key was not found in request! Dropping...")
 
-	} else if request["title"] == "" {
+	} else if request["title"] == "" { //check if 'title' key is empty, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "'title' key value was Empty!"
 		logger.Log.Error("Recivied title key that was Empty! Dropping...")
 
-	} else {
+	} else { //if all test pass then pass 'title' key value to AniSearch function
 		w.WriteHeader(http.StatusOK)
 		message = search.AniSearch(request["title"].(string))
 		logger.Log.Info(payload)
 	}
 
-	payload, _ = json.MarshalIndent(message, "", "\t")
+	payload, _ = json.MarshalIndent(message, "", "\t") //convert message to JSON format
 
 	logger.Log.Infof("Sending response to %v", r.RemoteAddr)
-	w.Write(payload)
+	w.Write(payload) //Send payload
 }
