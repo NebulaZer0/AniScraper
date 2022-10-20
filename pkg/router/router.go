@@ -12,7 +12,7 @@ import (
 
 func Run() {
 	router := mux.NewRouter()
-	port := "8080" //GRAB FROM ENV FILE
+	port := ":8080" //GRAB FROM ENV FILE
 
 	router.HandleFunc("/", getAnime).Methods("GET")
 	logger.Log.Infof("Started server on port %v", port)
