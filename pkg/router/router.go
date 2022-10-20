@@ -38,17 +38,17 @@ func getAnime(w http.ResponseWriter, r *http.Request) {
 		message["Error"] = "Given " + strconv.Itoa(len(request)) + " Keys when only 1 was Expected!"
 		logger.Log.Errorf("Recieved %v Keys instead of one! Dropping...", len(request))
 
-	} else if _, ok := request["title"]; !ok { //check if 'title' key is missing, if true then drop request
+	} else if _, ok := request["title"]; !ok { //Check if 'title' key is missing, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "'title' key was not found!"
 		logger.Log.Error("title key was not found in request! Dropping...")
 
-	} else if request["title"] == "" { //check if 'title' key is empty, if true then drop request
+	} else if request["title"] == "" { //Check if 'title' key is empty, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "'title' key value was Empty!"
 		logger.Log.Error("Recivied title key that was Empty! Dropping...")
 
-	} else { //if all test pass then pass 'title' key value to AniSearch function
+	} else { //Ixf all test pass then pass 'title' key value to AniSearch function
 		w.WriteHeader(http.StatusOK)
 		message = search.AniSearch(request["title"].(string))
 		logger.Log.Info(payload)
