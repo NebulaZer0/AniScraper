@@ -12,11 +12,11 @@ import (
 
 func Run() {
 	router := mux.NewRouter()
-	port := 8080
+	port := "8080" //GRAB FROM ENV FILE
 
 	router.HandleFunc("/", getAnime).Methods("GET")
 	logger.Log.Infof("Started server on port %v", port)
-	logger.Log.Fatal(http.ListenAndServe(":8080", router))
+	logger.Log.Fatal(http.ListenAndServe(port, router))
 }
 
 func getAnime(w http.ResponseWriter, r *http.Request) {
@@ -36,22 +36,21 @@ func getAnime(w http.ResponseWriter, r *http.Request) {
 	if len(request) > 1 { //Check if more then one key was recieved, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "Given " + strconv.Itoa(len(request)) + " Keys when only 1 was Expected!"
-		logger.Log.Errorf("Recieved %v Keys instead of one! Dropping...", len(request))
+		logger.Log.Errorf("Recieved %v Keys instead of one! Returning Error...", len(request))
 
 	} else if _, ok := request["title"]; !ok { //Check if 'title' key is missing, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "'title' key was not found!"
-		logger.Log.Error("title key was not found in request! Dropping...")
+		logger.Log.Error("'title' key was not found in request! Returning Error...")
 
 	} else if request["title"] == "" { //Check if 'title' key is empty, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "'title' key value was Empty!"
-		logger.Log.Error("Recivied title key that was Empty! Dropping...")
+		logger.Log.Error("Recivied 'title' key that was Empty! Returning Error...")
 
 	} else { //Ixf all test pass then pass 'title' key value to AniSearch function
 		w.WriteHeader(http.StatusOK)
 		message = search.AniSearch(request["title"].(string))
-		logger.Log.Info(payload)
 	}
 
 	payload, _ = json.MarshalIndent(message, "", "\t") //convert message to JSON format
