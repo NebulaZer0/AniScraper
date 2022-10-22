@@ -2,6 +2,7 @@ package search
 
 import (
 	"animescrapper/pkg/logger"
+
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -14,14 +15,14 @@ type entry struct {
 	Magnet string `json:"magnet"`
 }
 
-func AniSearch(title string) map[string]interface{} {
+func AniSearch(query map[string]interface{}) map[string]interface{} {
 
 	var entrys []entry
 
 	c := colly.NewCollector()
 	skipCount := 0
 	pageCount := 0
-	title = strings.ReplaceAll(title, " ", "+")
+	title := strings.ReplaceAll(query["title"].(string), " ", "+")
 
 	link := "https://animetosho.org/search?q=" + title
 
@@ -40,8 +41,19 @@ func AniSearch(title string) map[string]interface{} {
 			}
 		})
 
-		if strings.Contains(name, "[EMBER]") && len(seed) != 0 { // Filter out seed string that are empty, and only add [EMBER] files | Note: Remove filter for [Ember]?
+		if _, ok := query["filter"]; ok {
+			for _, filter := range query["filter"].([]interface{}) {
+				if !strings.Contains(name, filter.(string)) {
+					skipCount++
+					return
+				}
+			}
+		}
 
+		if len(seed) == 0 {
+			skipCount++
+			return
+		} else {
 			seed = strings.TrimSpace(strings.ReplaceAll(seed[0:strings.Index(seed, "/")], "Seeders:", "")) //Clean up Seed String
 
 			entry := entry{ //Create entry for torrent
@@ -52,9 +64,8 @@ func AniSearch(title string) map[string]interface{} {
 			}
 
 			entrys = append(entrys, entry) //add entry to slice
-		} else {
-			skipCount++ // add to skip count
 		}
+
 	})
 
 	c.OnHTML(".home_list_pagination > a", func(h *colly.HTMLElement) { //loop through all pages, max is 15
@@ -72,7 +83,7 @@ func AniSearch(title string) map[string]interface{} {
 
 	if len(entrys) != 0 { //send entrys if found
 		message["Results"] = entrys
-		logger.Log.Infof("Skipped %v entrys that did not equal '[EMEBER]'!", skipCount)
+		logger.Log.Infof("Skipped %v entrys that had no seed or was filtered out!", skipCount)
 	} else { //if entrys are empty then search returned 0 entrys
 
 		message["Results"] = "No Results Found!"
