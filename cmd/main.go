@@ -1,9 +1,19 @@
 package main
 
 import (
+	"animescrapper/pkg/logger"
 	"animescrapper/pkg/router"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	router.Run()
+
+	err := godotenv.Load()
+
+	if err != nil {
+		logger.Log.Fatal(err)
+	} else {
+		router.Run()
+	}
 }

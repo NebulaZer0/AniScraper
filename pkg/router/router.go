@@ -5,6 +5,7 @@ import (
 	"animescrapper/pkg/search"
 	"encoding/json"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -12,7 +13,7 @@ import (
 
 func Run() {
 	router := mux.NewRouter()
-	port := ":8080" //GRAB FROM ENV FILE
+	port := os.Getenv("SERVER_PORT") //GRAB FROM ENV FILE
 
 	router.HandleFunc("/", getAnime).Methods("GET")
 	logger.Log.Infof("Started server on port %v", port)
@@ -48,7 +49,7 @@ func getAnime(w http.ResponseWriter, r *http.Request) {
 		message["Error"] = "'title' key value was Empty!"
 		logger.Log.Error("Recivied 'title' key that was Empty! Returning Error...")
 
-	} else { //Ixf all test pass then pass 'title' key value to AniSearch function
+	} else { //If all test pass then pass 'title' key value to AniSearch function
 		w.WriteHeader(http.StatusOK)
 		message = search.AniSearch(request["title"].(string))
 	}
