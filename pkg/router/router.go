@@ -34,20 +34,20 @@ func getAnime(w http.ResponseWriter, r *http.Request) {
 		logger.Log.Error(err)
 	}
 
-	if len(request) > 2 { //Check if more then one key was recieved, if true then drop request
+	if len(request) > 2 { //Check if more then two key was recieved, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
-		message["Error"] = "Given " + strconv.Itoa(len(request)) + " Keys when only 1 was Expected!"
-		logger.Log.Errorf("Recieved %v Keys instead of one! Returning Error...", len(request))
+		message["Error"] = "Given " + strconv.Itoa(len(request)) + " Keys when the max keys available is 2!"
+		logger.Log.Errorf("Recieved %v Keys! Max is 2!", len(request))
 
 	} else if _, ok := request["title"]; !ok { //Check if 'title' key is missing, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "'title' key was not found!"
-		logger.Log.Error("'title' key was not found in request! Returning Error...")
+		logger.Log.Error("'title' key was not found in request!")
 
 	} else if request["title"] == "" { //Check if 'title' key is empty, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "'title' key value was Empty!"
-		logger.Log.Error("Recivied 'title' key that was Empty! Returning Error...")
+		logger.Log.Error("Recivied 'title' key that was Empty!")
 
 	} else { //If all test pass then pass 'title' key value to AniSearch function
 		w.WriteHeader(http.StatusOK)
