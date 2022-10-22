@@ -34,7 +34,7 @@ func getAnime(w http.ResponseWriter, r *http.Request) {
 		logger.Log.Error(err)
 	}
 
-	if len(request) > 1 { //Check if more then one key was recieved, if true then drop request
+	if len(request) > 2 { //Check if more then one key was recieved, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
 		message["Error"] = "Given " + strconv.Itoa(len(request)) + " Keys when only 1 was Expected!"
 		logger.Log.Errorf("Recieved %v Keys instead of one! Returning Error...", len(request))
@@ -51,7 +51,7 @@ func getAnime(w http.ResponseWriter, r *http.Request) {
 
 	} else { //If all test pass then pass 'title' key value to AniSearch function
 		w.WriteHeader(http.StatusOK)
-		message = search.AniSearch(request["title"].(string))
+		message = search.AniSearch(request)
 	}
 
 	payload, _ = json.MarshalIndent(message, "", "\t") //convert message to JSON format
