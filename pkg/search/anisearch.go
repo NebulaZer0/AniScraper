@@ -42,12 +42,10 @@ func AniSearch(query map[string]interface{}) map[string]interface{} {
 		})
 
 		if _, ok := query["filter"]; ok {
-			if len(query["filter"].([]interface{})) != 0 {
-				for _, filter := range query["filter"].([]interface{}) {
-					if !strings.Contains(name, filter.(string)) {
-						skipCount++
-						return
-					}
+			for _, filter := range query["filter"].([]interface{}) {
+				if !strings.Contains(name, filter.(string)) {
+					skipCount++
+					return
 				}
 			}
 		}
