@@ -34,10 +34,10 @@ func getAnime(w http.ResponseWriter, r *http.Request) {
 		logger.Log.Error(err)
 	}
 
-	if len(request) > 2 { //Check if more then two key was recieved, if true then drop request
+	if len(request) > 3 { //Check if more then two key was recieved, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)
-		message["Error"] = "Given " + strconv.Itoa(len(request)) + " Keys when the max keys available is 2!"
-		logger.Log.Errorf("Recieved %v Keys! Max is 2!", len(request))
+		message["Error"] = "Given " + strconv.Itoa(len(request)) + " Keys when the max keys available is 3!"
+		logger.Log.Errorf("Recieved %v Keys! Max is 3!", len(request))
 
 	} else if _, ok := request["title"]; !ok { //Check if 'title' key is missing, if true then drop request
 		w.WriteHeader(http.StatusBadRequest)

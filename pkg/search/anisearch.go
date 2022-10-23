@@ -2,6 +2,7 @@ package search
 
 import (
 	"animescrapper/pkg/logger"
+	"strconv"
 
 	"strings"
 
@@ -41,7 +42,14 @@ func AniSearch(query map[string]interface{}) map[string]interface{} {
 			}
 		})
 
-		if _, ok := query["filter"]; ok {
+		if len(seed) == 0 {
+			skipCount++
+			return
+		} else {
+			seed = strings.TrimSpace(strings.ReplaceAll(seed[0:strings.Index(seed, "/")], "Seeders:", "")) //Clean up Seed String
+		}
+
+		if _, ok := query["filter"]; ok { //Check if filter map exist in query
 			for _, filter := range query["filter"].([]interface{}) {
 				if !strings.Contains(name, filter.(string)) {
 					skipCount++
@@ -50,21 +58,25 @@ func AniSearch(query map[string]interface{}) map[string]interface{} {
 			}
 		}
 
-		if len(seed) == 0 {
-			skipCount++
-			return
-		} else {
-			seed = strings.TrimSpace(strings.ReplaceAll(seed[0:strings.Index(seed, "/")], "Seeders:", "")) //Clean up Seed String
+		if _, ok := query["seedMin"]; ok { //Check if seedMin map exist in query
 
-			entry := entry{ //Create entry for torrent
-				Name:   name,
-				Size:   doc.Find(".size").Text(),
-				Magnet: magnet,
-				Seeds:  seed,
+			seedMin, _ := strconv.Atoi(query["seedMin"].(string))
+			seedValue, _ := strconv.Atoi(seed)
+
+			if seedValue < seedMin { //Check if seedValue is less then the seedMin
+				skipCount++
+				return
 			}
-
-			entrys = append(entrys, entry) //add entry to slice
 		}
+
+		entry := entry{ //Create entry for torrent
+			Name:   name,
+			Size:   doc.Find(".size").Text(),
+			Magnet: magnet,
+			Seeds:  seed,
+		}
+
+		entrys = append(entrys, entry) //add entry to slice
 
 	})
 
