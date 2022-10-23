@@ -87,12 +87,12 @@ func AniSearch(query Query) map[string]interface{} {
 
 	})
 
-	// set a default for MaxPage
-	if query.MaxPage == 0 {
-		query.MaxPage = 15
-	}
-
 	c.OnHTML(".home_list_pagination > a", func(h *colly.HTMLElement) { //loop through all pages, max is 15
+		// set a default for MaxPage
+		if query.MaxPage == 0 {
+			query.MaxPage = 15
+		}
+
 		if pageCount < query.MaxPage {
 			next_page := h.Request.AbsoluteURL(h.Attr("href"))
 			pageCount++
