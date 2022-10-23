@@ -16,14 +16,20 @@ type entry struct {
 	Magnet string `json:"magnet"`
 }
 
-func AniSearch(query map[string]interface{}) map[string]interface{} {
+type Query struct {
+	Title   string   `json:"title"`
+	Filter  []string `json:"filter"`
+	MinSeed int      `json:"minSeed"`
+}
+
+func AniSearch(query Query) map[string]interface{} {
 
 	var entrys []entry
 
 	c := colly.NewCollector()
 	skipCount := 0
 	pageCount := 0
-	title := strings.ReplaceAll(query["title"].(string), " ", "+")
+	title := strings.ReplaceAll(query.Title, " ", "+")
 
 	link := "https://animetosho.org/search?q=" + title
 
@@ -49,21 +55,20 @@ func AniSearch(query map[string]interface{}) map[string]interface{} {
 			seed = strings.TrimSpace(strings.ReplaceAll(seed[0:strings.Index(seed, "/")], "Seeders:", "")) //Clean up Seed String
 		}
 
-		if _, ok := query["filter"]; ok { //Check if filter map exist in query
-			for _, filter := range query["filter"].([]interface{}) {
-				if !strings.Contains(name, filter.(string)) {
+		if len(query.Filter) > 0 { //Check if filter were placed
+			for _, filter := range query.Filter {
+				if !strings.Contains(name, filter) {
 					skipCount++
 					return
 				}
 			}
 		}
 
-		if _, ok := query["seedMin"]; ok { //Check if seedMin map exist in query
+		if query.MinSeed != 0 { //Check if seedMin was placed
 
-			seedMin, _ := strconv.Atoi(query["seedMin"].(string))
 			seedValue, _ := strconv.Atoi(seed)
 
-			if seedValue < seedMin { //Check if seedValue is less then the seedMin
+			if seedValue < query.MinSeed { //Check if seedValue is less then the seedMin
 				skipCount++
 				return
 			}
