@@ -17,9 +17,11 @@ type entry struct {
 }
 
 type Query struct {
-	Title   string   `json:"title"`
-	Filter  []string `json:"filter"`
-	MinSeed int      `json:"minSeed"`
+	Title    string   `json:"title"`
+	Filter   []string `json:"filter"`
+	MinSeed  int      `json:"minSeed"`
+	MaxEntry int      `json:"maxEntry"`
+	MaxPage  int      `json:"maxPage"`
 }
 
 func AniSearch(query Query) map[string]interface{} {
@@ -86,7 +88,12 @@ func AniSearch(query Query) map[string]interface{} {
 	})
 
 	c.OnHTML(".home_list_pagination > a", func(h *colly.HTMLElement) { //loop through all pages, max is 15
-		if pageCount < 15 {
+		// set a default for MaxPage
+		if query.MaxPage == 0 {
+			query.MaxPage = 15
+		}
+
+		if pageCount < query.MaxPage {
 			next_page := h.Request.AbsoluteURL(h.Attr("href"))
 			pageCount++
 			c.Visit(next_page)
@@ -95,6 +102,15 @@ func AniSearch(query Query) map[string]interface{} {
 
 	c.Visit(link) // get site html
 
+	// set a default for MaxEntry
+	if query.MaxEntry == 0 {
+		query.MaxEntry = len(entrys)
+	}
+
+	// slice up the query.MaxEntry
+	if len(entrys) > query.MaxEntry {
+		entrys = entrys[:query.MaxEntry]
+	}
 	message := make(map[string]interface{})
 	logger.Log.Info("Completed Scraping!")
 
