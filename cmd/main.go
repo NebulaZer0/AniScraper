@@ -15,7 +15,7 @@ func main() {
 	if err != nil {
 		logger.Log.Fatal(err)
 	} else {
-		title := figure.NewColorFigure("Anime Scrapper", "shadow", "green", true)
+		title := figure.NewColorFigure("Anime Scrapper", "shadow	", "green", true)
 		title.Print()
 		router.Run()
 	}
