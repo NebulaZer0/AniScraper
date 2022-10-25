@@ -10,7 +10,7 @@ This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/). ADD
 |----------|:------------:|----------------------------------------------------|:--------:|------|
 | title    | `string`     | Title of anime to search                           | Yes      | 1    |
 | filter   | `[]string`   | Returns titles that contains filter strings        | No       | 10   |
-| minSeed  | `int`        | Returns titles that are greater then minSeed value | No       | none |
+| minSeed  | `int`        | Returns titles that are greater then minSeed value | No       | None |
 | maxEntry | `int`        | Returns a specfic amount of titles                 | No       | 100  |
 
 
