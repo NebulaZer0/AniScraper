@@ -1,5 +1,5 @@
 # AnimeScrapper
-This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/). ADD MORE
+This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/). ADD MORE!
 
 ## **Endpoints**
 ### GET `/search`
