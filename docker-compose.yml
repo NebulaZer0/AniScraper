@@ -3,8 +3,8 @@ version: '3.9'
 services:
   aniscrapper:
     build: .
-    container_name: aniscrapper
-    hostname: aniscrapper
+    container_name: aniscraper
+    hostname: aniscraper
     image: "aniscrapper"
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}" 
