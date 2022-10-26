@@ -11,12 +11,11 @@ import (
 func main() {
 
 	err := godotenv.Load()
-
+	p1 := figure.NewColorFigure("AniScrapper", "small", "cyan", true)
 	if err != nil {
 		logger.Log.Fatal(err)
 	} else {
-		title := figure.NewColorFigure("Anime Scrapper", "shadow	", "green", true)
-		title.Print()
+		p1.Print()
 		router.Run()
 	}
 }
