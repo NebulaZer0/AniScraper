@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  aniscrapper:
+    build: .
+    container_name: aniscrapper
+    hostname: aniscrapper
+    image: "aniscrapper"
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}" 
+    env_file:
+      - .env     # path to .env file

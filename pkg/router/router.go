@@ -13,7 +13,7 @@ import (
 
 func Run() {
 	router := mux.NewRouter()
-	port := os.Getenv("SERVER_PORT") //GRAB FROM ENV FILE
+	port := ":" + os.Getenv("SERVER_PORT") //GRAB FROM ENV FILE
 
 	router.HandleFunc("/search", getAnime).Methods("GET")
 	logger.Log.Infof("Started server on port %v", port)

@@ -1,8 +1,10 @@
 package main
 
 import (
+	//"animescrapper/pkg/logger"
 	"animescrapper/pkg/logger"
 	"animescrapper/pkg/router"
+	"os"
 
 	"github.com/common-nighthawk/go-figure"
 	"github.com/joho/godotenv"
@@ -10,12 +12,16 @@ import (
 
 func main() {
 
-	err := godotenv.Load()
 	p1 := figure.NewColorFigure("AniScrapper", "small", "cyan", true)
-	if err != nil {
-		logger.Log.Fatal(err)
-	} else {
-		p1.Print()
-		router.Run()
+
+	if _, ok := os.LookupEnv("SERVER_PORT"); !ok {
+		err := godotenv.Load("../.env")
+
+		if err != nil {
+			logger.Log.Fatal(err)
+		}
 	}
+
+	p1.Print()
+	router.Run()
 }
