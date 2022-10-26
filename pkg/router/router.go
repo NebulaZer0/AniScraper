@@ -15,7 +15,7 @@ func Run() {
 	router := mux.NewRouter()
 	port := os.Getenv("SERVER_PORT") //GRAB FROM ENV FILE
 
-	router.HandleFunc("/", getAnime).Methods("GET")
+	router.HandleFunc("/search", getAnime).Methods("GET")
 	logger.Log.Infof("Started server on port %v", port)
 	logger.Log.Fatal(http.ListenAndServe(port, router))
 }
