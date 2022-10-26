@@ -4,23 +4,35 @@ This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/). ADD
 
 ## **Quick Start**
 1. Clone the repo to a directory with:<br />
-`git clone git@github.com:NebulaZer0/animeScrapper.git`
+```sh 
+git clone git@github.com:NebulaZer0/animeScrapper.git
+```
 2. move to the `cmd` directory <br />
-`cd cmd`
+```sh 
+cd cmd
+```
 3. Create Executable:<br />
-`go build -o aniScrapper` 
+```go 
+go build -o aniScrapper
+```
 4. Start Service:<br />
-`./aniScrapper`
+```sh 
+./aniScrapper
+```
 
 ## **Docker Setup**
 1. Clone the repo to a directory with:<br />
-`git clone git@github.com:NebulaZer0/animeScrapper.git`
-
+```sh 
+git clone git@github.com:NebulaZer0/animeScrapper.git
+```
 2. Build the docker image:<br />
-`docker compose build`
-
+```sh
+docker compose build
+```
 3. Create container:<br />
-`docker compose up`
+```sh
+docker compose up
+```
 
 *To remove type* `docker compose down`
 
