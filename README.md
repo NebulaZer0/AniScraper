@@ -26,6 +26,11 @@ This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/). ADD
 
 ## **Endpoints**
 ### GET `/search`
+---
+## **Enviroment Variables**
+|Option      | Description                |
+|------------|----------------------------|
+|SERVER_PORT | Sets the port to listen on |
 
 ---
 ## **Items**
