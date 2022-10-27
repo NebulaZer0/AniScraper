@@ -1,6 +1,7 @@
 # AnimeScrapper
-This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/). ADD MORE!
+This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/).
 
+---
 
 ## **Quick Start**
 1. Clone the repo to a directory with:<br />
@@ -19,7 +20,7 @@ go build -o aniScrapper
 ```sh 
 ./aniScrapper
 ```
-
+---
 ## **Docker Setup**
 1. Clone the repo to a directory with:<br />
 ```sh 
@@ -34,10 +35,12 @@ docker compose build
 docker compose up
 ```
 
-*To remove type* `docker compose down`
+*To remove type:* `docker compose down`
+
+---
 
 ## **Endpoints**
-### GET `/search`
+### GET `/search` 
 ---
 ## **Enviroment Variables**
 |Option      | Description                |
@@ -56,10 +59,10 @@ docker compose up
 
 ---
 ## **API**
-### Title
+### Title Field
 Gets a torrent object based on the title
 ```sh
-curl -i -X GET localhost:8080/ \
+curl -i -X GET localhost:8080/search \
 -H "Content-Type: application/json" \
 -d '{ "title": "Belle Movie" }'
 ```
@@ -81,3 +84,36 @@ Content-Length: 694
         ]
 }%
 ```
+### Filter Field
+Shows releated torrent names based on filter strings.
+
+```sh
+curl -i -X GET localhost:8080/search \
+-H "Content-Type: application/json" \
+-d '{ "title": "Belle Movie", "filter": ["Episode 1", "Season 1"]}'
+```
+
+### Minimum Seed Field
+Get seeds that are greater then the minimum seed value.
+
+```sh
+curl -i -X GET localhost:8080/search \
+-H "Content-Type: application/json" \
+-d '{ "title": "Belle Movie", "minSeed": 50}'
+```
+
+### Max Entry Field
+Gets a specific amount of entrys based on max entry value.
+
+```sh
+curl -i -X GET localhost:8080/search \
+-H "Content-Type: application/json" \
+-d '{ "title": "Belle Movie", "maxEntry": 25}'
+```
+---
+## Library used
+### [Go Figure](https://github.com/common-nighthawk/go-figure)<br />
+### [Gorilla/Mux](https://github.com/gorilla/mux)<br />
+### [GoDotEnv](https://github.com/joho/godotenv)<br />
+### [Colly](https://github.com/gocolly/colly)
+

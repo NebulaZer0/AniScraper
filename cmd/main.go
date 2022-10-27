@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"animescrapper/pkg/logger"
 	"animescrapper/pkg/logger"
 	"animescrapper/pkg/router"
 	"os"
