@@ -111,7 +111,7 @@ curl -i -X GET localhost:8080/search \
 -d '{ "title": "Belle Movie", "maxEntry": 25}'
 ```
 ---
-## Library used
+## Libraries Used
 ### [Go Figure](https://github.com/common-nighthawk/go-figure)<br />
 ### [Gorilla/Mux](https://github.com/gorilla/mux)<br />
 ### [GoDotEnv](https://github.com/joho/godotenv)<br />
