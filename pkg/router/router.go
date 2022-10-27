@@ -37,10 +37,9 @@ func getAnime(w http.ResponseWriter, r *http.Request) {
 	if ok, err := validate(request); ok {
 		w.WriteHeader(http.StatusOK)
 		message = search.AniSearch(request)
-
-		logger.Log.Info(request)
 	} else {
 		message["Error"] = err
+		logger.Log.Error(err)
 	}
 
 	payload, _ = json.MarshalIndent(message, "", "\t") //convert message to JSON format
@@ -57,6 +56,8 @@ func validate(q search.Query) (bool, string) {
 	} else if len(q.Filter) > 10 {
 
 		return false, "You have " + strconv.Itoa(len(q.Filter)) + "! Max is 10!"
+	} else if q.MaxEntry > 100 {
+		return false, "You have " + strconv.Itoa(q.MaxEntry) + "! Max is 100!"
 	} else {
 		return true, ""
 	}
