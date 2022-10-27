@@ -2,6 +2,7 @@ package search
 
 import (
 	"animescrapper/pkg/logger"
+	"os"
 	"strconv"
 
 	"strings"
@@ -89,11 +90,13 @@ func AniSearch(query Query) map[string]interface{} {
 
 	c.OnHTML(".home_list_pagination > a", func(h *colly.HTMLElement) { //loop through all pages, max is 15
 		// set a default for MaxPage
-		if query.MaxPage == 0 {
-			query.MaxPage = 15
+		maxPage, err := strconv.Atoi(os.Getenv("MAX_PAGE"))
+
+		if err != nil {
+			logger.Log.Fatal(err)
 		}
 
-		if pageCount < query.MaxPage {
+		if pageCount < maxPage {
 			next_page := h.Request.AbsoluteURL(h.Attr("href"))
 			pageCount++
 			c.Visit(next_page)
