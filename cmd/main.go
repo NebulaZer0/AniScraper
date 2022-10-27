@@ -3,6 +3,7 @@ package main
 import (
 	"animescrapper/pkg/logger"
 	"animescrapper/pkg/router"
+	"fmt"
 	"os"
 
 	"github.com/common-nighthawk/go-figure"
@@ -11,7 +12,7 @@ import (
 
 func main() {
 
-	p1 := figure.NewColorFigure("AniScrapper", "small", "cyan", true)
+	banner := figure.NewColorFigure("AniScrapper", "small", "cyan", true)
 
 	if _, ok := os.LookupEnv("SERVER_PORT"); !ok {
 		err := godotenv.Load("../.env")
@@ -21,6 +22,7 @@ func main() {
 		}
 	}
 
-	p1.Print()
+	banner.Print()
+	fmt.Println("Created by NebulaZer0 & Provmawn")
 	router.Run()
 }

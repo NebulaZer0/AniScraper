@@ -40,9 +40,10 @@ docker compose up
 ---
 
 ## **Enviroment Variables**
-|Option      | Description                |
-|------------|----------------------------|
-|SERVER_PORT | Sets the port to listen on |
+|Option      | Description                           | Default |
+|------------|---------------------------------------|:-------:|
+|SERVER_PORT | Sets the port to listen on            | 8080    |
+|MAX_PAGE    | Sets how many pages to scrape through | 15      |
 
 
 
