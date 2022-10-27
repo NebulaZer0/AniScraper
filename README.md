@@ -56,10 +56,10 @@ docker compose up
 
 ---
 ## **API**
-### Title
+### Title Field
 Gets a torrent object based on the title
 ```sh
-curl -i -X GET localhost:8080/ \
+curl -i -X GET localhost:8080/search \
 -H "Content-Type: application/json" \
 -d '{ "title": "Belle Movie" }'
 ```
@@ -80,4 +80,12 @@ Content-Length: 694
                 }
         ]
 }%
+```
+### Filter Field
+Shows releated torrent names based on filter strings.
+
+```sh
+curl -i -X GET localhost:8080/search \
+-H "Content-Type: application/json" \
+-d '{ "title": "Belle Movie", "filter": ["Episode 1", "Season 1"]}'
 ```
