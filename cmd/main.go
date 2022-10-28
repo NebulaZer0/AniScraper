@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	banner := figure.NewColorFigure("AniScrapper", "small", "cyan", true)
+	banner := figure.NewColorFigure("AniScraper", "small", "cyan", true)
 
 	if _, ok := os.LookupEnv("SERVER_PORT"); !ok {
 		err := godotenv.Load("../.env")
