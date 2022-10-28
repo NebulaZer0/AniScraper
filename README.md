@@ -1,4 +1,4 @@
-# AniScrapper
+# AniScraper
 This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/).
 
 ---
@@ -6,7 +6,7 @@ This API scrapes torrent magents from [AnimeTosho](https://animetosho.org/).
 ## **Quick Start**
 1. Clone the repo to a directory with:<br />
 ```sh 
-git clone git@github.com:NebulaZer0/animeScrapper.git
+git clone git@github.com:NebulaZer0/AniScraper.git
 ```
 2. move to the `cmd` directory <br />
 ```sh 
@@ -14,17 +14,17 @@ cd cmd
 ```
 3. Create Executable:<br />
 ```go 
-go build -o aniScrapper
+go build -o aniscraper
 ```
 4. Start Service:<br />
 ```sh 
-./aniScrapper
+./aniscraper
 ```
 ---
 ## **Docker Setup**
 1. Clone the repo to a directory with:<br />
 ```sh 
-git clone git@github.com:NebulaZer0/animeScrapper.git
+git clone git@github.com:NebulaZer0/AniScraper.git
 ```
 2. Build the docker image:<br />
 ```sh
