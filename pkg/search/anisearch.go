@@ -22,10 +22,9 @@ type Query struct {
 	Filter   []string `json:"filter"`
 	MinSeed  int      `json:"minSeed"`
 	MaxEntry int      `json:"maxEntry"`
-	MaxPage  int      `json:"maxPage"`
 }
 
-func AniSearch(query Query) map[string]interface{} {
+func AniSearch(query Query) any {
 
 	var entrys []entry
 
@@ -34,6 +33,8 @@ func AniSearch(query Query) map[string]interface{} {
 	pageCount := 0
 	title := strings.ReplaceAll(query.Title, " ", "+")
 
+	logger.Log.Info(title)
+
 	link := "https://animetosho.org/search?q=" + title
 
 	c.OnHTML(".home_list_entry", func(h *colly.HTMLElement) {
@@ -41,12 +42,16 @@ func AniSearch(query Query) map[string]interface{} {
 		doc := h.DOM
 
 		var magnet string
-		name := doc.Find(".link > a").Text()             //get name of torrent
-		seed, _ := doc.Find("span[title]").Attr("title") // get seed string
+		//get name of torrent
+		name := doc.Find(".link > a").Text()
+		// get seed string
+		seed, _ := doc.Find("span[title]").Attr("title")
 
-		h.ForEach(".links > a", func(i int, e *colly.HTMLElement) { // loop through links and find Magnet link
+		// loop through links and find Magnet link
+		h.ForEach(".links > a", func(i int, e *colly.HTMLElement) {
 			if e.Text == "Magnet" {
-				magnet = e.Attr("href") //add Magnet link to magnet var
+				//add Magnet link to magnet var
+				magnet = e.Attr("href")
 				return
 			}
 		})
@@ -55,10 +60,13 @@ func AniSearch(query Query) map[string]interface{} {
 			skipCount++
 			return
 		} else {
-			seed = strings.TrimSpace(strings.ReplaceAll(seed[0:strings.Index(seed, "/")], "Seeders:", "")) //Clean up Seed String
+			//Clean up Seed String
+			seed = strings.TrimSpace(
+				strings.ReplaceAll(seed[0:strings.Index(seed, "/")],
+					"Seeders:", ""))
 		}
 
-		if len(query.Filter) > 0 { //Check if filter were placed
+		if len(query.Filter) > 0 {
 			for _, filter := range query.Filter {
 				if !strings.Contains(name, filter) {
 					skipCount++
@@ -66,29 +74,30 @@ func AniSearch(query Query) map[string]interface{} {
 				}
 			}
 		}
-
-		if query.MinSeed != 0 { //Check if seedMin was placed
+		//Check if seedMin was placed
+		if query.MinSeed != 0 {
 
 			seedValue, _ := strconv.Atoi(seed)
-
-			if seedValue < query.MinSeed { //Check if seedValue is less then the seedMin
+			//Check if seedValue is less then the seedMin
+			if seedValue < query.MinSeed {
 				skipCount++
 				return
 			}
 		}
 
-		entry := entry{ //Create entry for torrent
+		//Create entry for torrent
+		entry := entry{
 			Name:   name,
 			Size:   doc.Find(".size").Text(),
 			Magnet: magnet,
 			Seeds:  seed,
 		}
-
-		entrys = append(entrys, entry) //add entry to slice
+		//add entry to slice
+		entrys = append(entrys, entry)
 
 	})
-
-	c.OnHTML(".home_list_pagination > a", func(h *colly.HTMLElement) { //loop through all pages, max is 15
+	//loop through all pages, max is 15
+	c.OnHTML(".home_list_pagination > a", func(h *colly.HTMLElement) {
 		// set a default for MaxPage
 		maxPage, err := strconv.Atoi(os.Getenv("MAX_PAGE"))
 
@@ -102,8 +111,8 @@ func AniSearch(query Query) map[string]interface{} {
 			c.Visit(next_page)
 		}
 	})
-
-	c.Visit(link) // get site html
+	// get site html
+	c.Visit(link)
 
 	// set a default for MaxEntry
 	if query.MaxEntry == 0 {
@@ -114,16 +123,19 @@ func AniSearch(query Query) map[string]interface{} {
 	if len(entrys) > query.MaxEntry {
 		entrys = entrys[:query.MaxEntry]
 	}
-	message := make(map[string]interface{})
+
 	logger.Log.Info("Completed Scraping!")
 
-	if len(entrys) != 0 { //send entrys if found
-		message["Results"] = entrys
-		logger.Log.Infof("Skipped %v entrys that had no seed or was filtered out!", skipCount)
-	} else { //if entrys are empty then search returned 0 entrys
+	//send entrys if found, else return 0
+	if len(entrys) != 0 {
+		logger.Log.Infof(
+			"Skipped %v entrys that had no seed or was filtered out!",
+			skipCount)
 
-		message["Results"] = "No Results Found!"
+		return entrys
+	} else {
 		logger.Log.Info("No Entrys Found!")
+		return entrys
 	}
-	return message
+
 }

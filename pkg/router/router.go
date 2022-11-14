@@ -13,7 +13,8 @@ import (
 
 func Run() {
 	router := mux.NewRouter()
-	port := ":" + os.Getenv("SERVER_PORT") //GRAB FROM ENV FILE
+	//Get port number from ENV file
+	port := ":" + os.Getenv("SERVER_PORT")
 
 	router.HandleFunc("/search", getAnime).Methods("GET")
 	logger.Log.Infof("Started server on port %v", port)
@@ -23,29 +24,57 @@ func Run() {
 func getAnime(w http.ResponseWriter, r *http.Request) {
 
 	var payload []byte
-	var request search.Query                // Create Query Struct
-	message := make(map[string]interface{}) //return message AKA payload
+	message := make(map[string]interface{})
+
+	//Set Headers
+	w.Header().Set("Content-type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	logger.Log.Infof("Request received from %v", r.RemoteAddr)
-	w.Header().Set("Content-type", "application/json") //set header
 
-	err := json.NewDecoder(r.Body).Decode(&request) //decode body and put in var request
-	if err != nil {
-		logger.Log.Error(err)
-	}
+	query := queryStringConverter(r)
 
-	if ok, err := validate(request); ok {
+	if ok, err := validate(query); ok {
+
 		w.WriteHeader(http.StatusOK)
-		message = search.AniSearch(request)
+		//convert message to JSON format
+		payload, _ = json.MarshalIndent(search.AniSearch(query), "", "\t")
 	} else {
 		message["Error"] = err
+		//convert message to JSON format
+		payload, _ = json.MarshalIndent(message, "", "\t")
 		logger.Log.Error(err)
 	}
 
-	payload, _ = json.MarshalIndent(message, "", "\t") //convert message to JSON format
-
 	logger.Log.Infof("Sending response to %v", r.RemoteAddr)
+
 	w.Write(payload) //Send payload
+
+}
+
+func queryStringConverter(r *http.Request) search.Query {
+	var q search.Query
+
+	logger.Log.Info(r.URL)
+
+	q.Title = r.URL.Query().Get("title")
+
+	q.Filter = r.URL.Query()["filter"]
+
+	seed, err := strconv.Atoi(r.URL.Query().Get("minSeed"))
+
+	if err == nil {
+		q.MinSeed = seed
+	}
+
+	entry, err := strconv.Atoi(r.URL.Query().Get("maxEntry"))
+
+	if err == nil {
+		q.MaxEntry = entry
+	}
+
+	return q
+
 }
 
 func validate(q search.Query) (bool, string) {
