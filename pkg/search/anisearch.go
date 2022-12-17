@@ -137,5 +137,4 @@ func AniSearch(query Query) any {
 		logger.Log.Info("No Entrys Found!")
 		return entrys
 	}
-
 }

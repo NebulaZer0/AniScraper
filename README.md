@@ -44,8 +44,7 @@ docker compose up
 |------------|---------------------------------------|:-------:|
 |SERVER_PORT | Sets the port to listen on            | 8080    |
 |MAX_PAGE    | Sets how many pages to scrape through | 15      |
-
-
+|ACAO| Set Access-Control-Allow-Origin header address | * |
 
 ---
 # **API**
@@ -66,17 +65,15 @@ docker compose up
 ### Title Field
 Gets a torrent object based on the title
 ```sh
-curl -i -X GET localhost:8080/search \
--H "Content-Type: application/json" \
--d '{ "title": "Belle Movie" }'
+curl -i -X GET localhost:8080/search?title="animeName" \
+-H "Content-Type: application/json"
 ```
 ### Filter Field
 Shows releated torrent names based on filter strings.
 
 ```sh
 curl -i -X GET localhost:8080/search \
--H "Content-Type: application/json" \
--d '{ "title": "Belle Movie", "filter": ["Episode 1", "Season 1"]}'
+-H "Content-Type: application/json"
 ```
 
 ### Minimum Seed Field
@@ -84,8 +81,7 @@ Get seeds that are greater then the minimum seed value.
 
 ```sh
 curl -i -X GET localhost:8080/search \
--H "Content-Type: application/json" \
--d '{ "title": "Belle Movie", "minSeed": 50}'
+-H "Content-Type: application/json"
 ```
 
 ### Max Entry Field
@@ -93,8 +89,7 @@ Gets a specific amount of entrys based on max entry value.
 
 ```sh
 curl -i -X GET localhost:8080/search \
--H "Content-Type: application/json" \
--d '{ "title": "Belle Movie", "maxEntry": 25}'
+-H "Content-Type: application/json"
 ```
 ---
 #### Response
