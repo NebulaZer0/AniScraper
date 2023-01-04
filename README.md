@@ -65,14 +65,14 @@ docker compose up
 ### Title Field
 Gets a torrent object based on the title
 ```sh
-curl -i -X GET localhost:8080/search?title="animeName" \
+curl -i -X GET localhost:8080/search?title=animeName \
 -H "Content-Type: application/json"
 ```
 ### Filter Field
 Shows releated torrent names based on filter strings.
 
 ```sh
-curl -i -X GET localhost:8080/search \
+curl -i -X GET http://localhost:8080/search?title=animeName&filter=value&filter=value2 \
 -H "Content-Type: application/json"
 ```
 
@@ -80,7 +80,7 @@ curl -i -X GET localhost:8080/search \
 Get seeds that are greater then the minimum seed value.
 
 ```sh
-curl -i -X GET localhost:8080/search \
+curl -i -X GET http://localhost:8080/search?title=konosuba&minSeed=10 \
 -H "Content-Type: application/json"
 ```
 
@@ -88,7 +88,7 @@ curl -i -X GET localhost:8080/search \
 Gets a specific amount of entrys based on max entry value.
 
 ```sh
-curl -i -X GET localhost:8080/search \
+curl -i -X GET http://localhost:8080/search?title=KonoSuba&maxEntry=5 \
 -H "Content-Type: application/json"
 ```
 ---
